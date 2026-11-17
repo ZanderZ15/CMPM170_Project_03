@@ -1,25 +1,21 @@
-using System.Threading.Tasks.Dataflow;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
     private InputAction moveAction;
-
+    private InputAction attackAction;
     private float acc = 500f;
-
     private float max_speed = 5f;
     Vector2 moveVal;
-
-
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rb;
 
 
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
         attackAction = InputSystem.actions.FindAction("Attack");
-        rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
+        rb = this.gameObject.GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -28,20 +24,19 @@ public class Movement : MonoBehaviour
         moveVal = moveAction.ReadValue<Vector2>();
         if (attackAction.WasPerformedThisFrame())
         {
-            Shoot(/*gameObject.transform.*/);
+            Shoot(transform.forward);
         }
-
     }
     void FixedUpdate()
     {
         
-        rigidbody.AddForce(moveVal * acc, ForceMode2D.Force);
-        CapSpeed(rigidbody);
+        rb.AddForce(moveVal * acc, ForceMode2D.Force);
+        CapSpeed(rb);
         
         if (moveVal.sqrMagnitude > 0.01f)
         {
             float targetAngle = Mathf.Atan2(moveVal.y, moveVal.x) * Mathf.Rad2Deg - 90f;
-            rigidbody.MoveRotation(targetAngle);
+            rb.MoveRotation(targetAngle);
         }
         
     }
@@ -56,9 +51,11 @@ public class Movement : MonoBehaviour
         }
     }    
 
-    void Shoot()
+    void Shoot(Vector2 direction)
     {
-        
+        //bring bullet to our location
+        //start coroutine to have bullet travel in direction
+
     }
     
     
