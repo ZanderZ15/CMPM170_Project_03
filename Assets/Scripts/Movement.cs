@@ -8,8 +8,6 @@ public class Movement : MonoBehaviour
     private float acc = 500f;
 
     private float max_speed = 5f;
-
-    Vector2 move2d;
     Vector2 moveVal;
 
 
@@ -24,16 +22,23 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        
         //Move
-        move2d = moveAction.ReadValue<Vector2>(); //Reads input
-        moveVal = new Vector2(move2d.x, move2d.y); //Turns into Vector3
+        moveVal = moveAction.ReadValue<Vector2>();
+
+        
     }
     void FixedUpdate()
     {
         
-        rigidbody.AddRelativeForce(moveVal * acc, ForceMode2D.Force);
+        rigidbody.AddForce(moveVal * acc, ForceMode2D.Force);
         CapSpeed(rigidbody);
+        
+        if (moveVal.sqrMagnitude > 0.01f)
+        {
+            float targetAngle = Mathf.Atan2(moveVal.y, moveVal.x) * Mathf.Rad2Deg - 90f;
+            rigidbody.MoveRotation(targetAngle);
+        }
+        
     }
     void CapSpeed(Rigidbody2D rb)
     {
