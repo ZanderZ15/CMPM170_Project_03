@@ -1,3 +1,4 @@
+using System.Threading.Tasks.Dataflow;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
+        attackAction = InputSystem.actions.FindAction("Attack");
         rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
     }
 
@@ -24,8 +26,11 @@ public class Movement : MonoBehaviour
     {
         //Move
         moveVal = moveAction.ReadValue<Vector2>();
+        if (attackAction.WasPerformedThisFrame())
+        {
+            Shoot(/*gameObject.transform.*/);
+        }
 
-        
     }
     void FixedUpdate()
     {
@@ -50,6 +55,11 @@ public class Movement : MonoBehaviour
             rb.linearVelocity = new Vector2(velocity.x, velocity.y);
         }
     }    
+
+    void Shoot()
+    {
+        
+    }
     
     
 }
