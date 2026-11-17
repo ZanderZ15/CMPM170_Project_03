@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,9 +8,12 @@ public class Movement : MonoBehaviour
     private InputAction moveAction;
     private InputAction attackAction;
     private float acc = 500f;
-    private float max_speed = 5f;
+    private float max_speed = 10f;
     Vector2 moveVal;
     private Rigidbody2D rb;
+
+    [SerializeField] GameObject manager;
+    Projectile prman;
 
 
     void Start()
@@ -16,6 +21,8 @@ public class Movement : MonoBehaviour
         moveAction = InputSystem.actions.FindAction("Move");
         attackAction = InputSystem.actions.FindAction("Attack");
         rb = this.gameObject.GetComponent<Rigidbody2D>();
+
+        prman = manager.GetComponent<Projectile>();
     }
 
     void Update()
@@ -53,6 +60,14 @@ public class Movement : MonoBehaviour
 
     void Shoot(Vector2 direction)
     {
+        GameObject bul = prman.GetFirstActive();
+
+        if (bul == null)
+        {
+            return;
+        }
+        bul.SetActive(true);
+        bul.transform.position = this.transform.position;
         //bring bullet to our location
         //start coroutine to have bullet travel in direction
 
