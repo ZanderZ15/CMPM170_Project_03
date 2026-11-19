@@ -6,6 +6,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] float heartSize = 0.4f;
     [SerializeField] float heartSpacing = 0.45f;
     [SerializeField] float heightAbovePlayer = 1f;
+    
     const float hitHalfSize = 0.2f;
 
     int health;
@@ -62,7 +63,11 @@ public class PlayerHealth : MonoBehaviour
         }
 
         if (health <= 0)
+        {
             Debug.Log("Player is out of health!");
+            gameObject.SetActive(false);
+        }
+
     }
 
     void OnDestroy()
