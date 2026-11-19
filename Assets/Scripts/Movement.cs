@@ -31,7 +31,7 @@ public class Movement : MonoBehaviour
         moveVal = moveAction.ReadValue<Vector2>();
         if (attackAction.WasPerformedThisFrame())
         {
-            Shoot(transform.forward);
+            Shoot(transform.up); //direction player is facing
         }
     }
     void FixedUpdate()
@@ -66,8 +66,9 @@ public class Movement : MonoBehaviour
         {
             return;
         }
-        bul.SetActive(true);
-        bul.transform.position = this.transform.position;
+
+        bul.transform.position = transform.position;
+        prman.Launch(bul, direction);
         //bring bullet to our location
         //start coroutine to have bullet travel in direction
 

@@ -6,7 +6,12 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     List<GameObject> bulletArray;
+    Dictionary<GameObject, Vector2> bulletDirections = new Dictionary<GameObject, Vector2>();
+
     [SerializeField] GameObject bulletPrefab;
+    [SerializeField] float bulletSpeed = 10f;
+    [SerializeField] float maxDistance = 15f;
+
     void Start()
     {
         Vector2 spawnLocation = new Vector2(-1000, -1000);
@@ -20,34 +25,45 @@ public class Projectile : MonoBehaviour
         Debug.Log(bulletArray);
     }
     void Update()
-    {
+    {   
         Fly();
     }
 
     public GameObject GetFirstActive()
     {
-        for (int i = 0; i < 5; i++)
+        foreach (GameObject bul in bulletArray)
         {
-            if (!bulletArray[i].activeSelf)
-            {
-                return bulletArray[i];
-            }
+            //find first bullet not being used
+            if (!bul.activeSelf)
+            return bul;
         }
         return null;
     }
+
+    public void Launch(GameObject bul, Vector2 direction)
+    {
+        bulletDirections[bul] = direction.normalized;
+
+        //rotate bullet to face its travel direction
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        bul.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        bul.SetActive(true);
+    }
+    
     private void Fly()
     {
         foreach (GameObject bul in bulletArray)
         {
-            if (bul.activeSelf)
+            if (!bul.activeSelf) continue;
+
+            Vector2 dir = bulletDirections[bul];
+            //move bullet based on speed and elapsed time
+            bul.transform.position += (Vector3)(dir * bulletSpeed * Time.deltaTime);
+
+            if (bul.transform.position.magnitude > maxDistance)
             {
-                //Replace with acc fly code
-                Vector2 newPos = new Vector2(bul.transform.position.x + 0.01f, bul.transform.position.y);
-                bul.transform.position = newPos;
-                if (bul.transform.position.x > 10)
-                {
-                    bul.SetActive(false);
-                }
+                bul.SetActive(false);
             }
         }
     }
