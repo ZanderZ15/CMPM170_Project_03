@@ -11,6 +11,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float blockSize = 2f;
     [SerializeField] int blockHealth = 3;
     [SerializeField] float blockYOffset = 0f;  
+    [SerializeField] Sprite gunSprite;
 
     Camera cam;
     Sprite squareSprite;
@@ -45,8 +46,7 @@ public class EnemySpawner : MonoBehaviour
         Vector3 c = cam.transform.position;
 
         block = new GameObject("SpawnerBlock");
-        block.transform.position = new Vector3(c.x + halfW - blockSize - 1f/ 2f, c.y + blockYOffset, 0f);
-        //right edge - 1f
+        block.transform.position = new Vector3(15f, 0f, 0f);
 
         GameObject body = new GameObject("Body");
         body.transform.SetParent(block.transform, false);
@@ -128,8 +128,9 @@ public class EnemySpawner : MonoBehaviour
         GameObject e = new GameObject("Enemy");
         e.transform.position = new Vector3(x, y, 0f);
 
+        //gun
         Enemy enemy = e.AddComponent<Enemy>();
         enemy.Init(projectileManager, squareSprite, enemySpeed, enemySize,
-                   c.x - halfW - enemySize * 2f);
+                   c.x - halfW - enemySize * 2f, gunSprite);
     }
 }

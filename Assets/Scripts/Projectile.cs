@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Rendering.BuiltIn.ShaderGraph;
+//using Unity.VisualScripting;
+//using UnityEditor.Rendering.BuiltIn.ShaderGraph;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -10,6 +10,8 @@ public class Projectile : MonoBehaviour
     //Dictionary<GameObject, Vector2> bulletDirections = new Dictionary<GameObject, Vector2>();
 
     [SerializeField] GameObject bulletPrefab;
+    [SerializeField] float bulletSpeed = 10f;
+    [SerializeField] float bulletScale = 1.5f;   
     
 
     void Start()
@@ -20,6 +22,8 @@ public class Projectile : MonoBehaviour
         {
             GameObject bullet = Instantiate(bulletPrefab, spawnLocation, Quaternion.identity);
             ProjClass pClass = new ProjClass(bullet);
+            pClass.SetSpeed(bulletSpeed);
+            bullet.transform.localScale *= bulletScale;
 
             bulletArray.Add(pClass);
             bulletArray[i].SetActive(false);
