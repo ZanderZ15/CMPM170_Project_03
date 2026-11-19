@@ -6,12 +6,12 @@ public class Enemy : MonoBehaviour
     PlayerHealth player;         
     float speed;
     float halfSize;
-    Transform target;
+    float despawnX;
 
     //debounce for enemy damage
     bool hasHit;
 
-    public void Init(Projectile projectileManager, Sprite sprite, float moveSpeed, float size, Transform playerTransform, Sprite gunSprite)
+    public void Init(Projectile projectileManager, Sprite sprite, float moveSpeed, float size, float leftEdgeX, Sprite gunSprite)
     {
         projectiles = projectileManager;
         player = FindFirstObjectByType<PlayerHealth>();
@@ -58,6 +58,12 @@ public class Enemy : MonoBehaviour
 
         //damaging player
         if (!hasHit && player != null && player.Overlaps(transform.position, halfSize))
+        {
+            hasHit = true;
+            player.TakeDamage(1);
+        }
+
+        if (transform.position.x < despawnX)
         {
             hasHit = true;
             player.TakeDamage(1);

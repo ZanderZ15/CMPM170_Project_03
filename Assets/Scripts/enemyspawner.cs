@@ -149,6 +149,7 @@ public class EnemySpawner : MonoBehaviour
 
         //gun
         Enemy enemy = e.AddComponent<Enemy>();
-        enemy.Init(projectileManager, squareSprite, enemySpeed, enemySize, playerTransform, gunSprite);
+        enemy.Init(projectileManager, squareSprite, enemySpeed, enemySize,
+                   c.x - halfW - enemySize * 2f, gunSprite);
     }
 }
