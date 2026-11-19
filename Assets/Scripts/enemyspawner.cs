@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] Projectile projectileManager;
-    [SerializeField] float spawnInterval = 1.5f;
+    [SerializeField] float spawnInterval = 3f;
     [SerializeField] float enemySpeed = 2f;
     [SerializeField] float enemySize = 1f;
 
@@ -16,6 +16,7 @@ public class EnemySpawner : MonoBehaviour
     Camera cam;
     Sprite squareSprite;
     float timer;
+    Transform playerTransform;
 
     GameObject block;
     SpriteRenderer[] segments;
@@ -24,6 +25,11 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+
+        //find the player
+        GameObject player = GameObject.Find("Player");
+        if (player != null)
+            playerTransform = player.transform;
 
         //projectile component 
         if (projectileManager == null)
@@ -116,14 +122,27 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
-        //despawn boundary
-        float halfH = cam.orthographicSize;
-        float halfW = halfH * cam.aspect;
-        Vector3 c = cam.transform.position;
-
-        //enemy spawn
-        float x = block.transform.position.x - blockSize / 2f - enemySize / 2f;
+        //pick a random side: 0=left, 1=right, 2=top, 3=bottom
+        int side = Random.Range(0, 4);
+        float x = block.transform.position.x;
         float y = block.transform.position.y;
+        float offset = blockSize / 2f + enemySize / 2f;
+
+        switch (side)
+        {
+            case 0: // left
+                x -= offset;
+                break;
+            case 1: // right
+                x += offset;
+                break;
+            case 2: // top
+                y += offset;
+                break;
+            case 3: // bottom
+                y -= offset;
+                break;
+        }
 
         GameObject e = new GameObject("Enemy");
         e.transform.position = new Vector3(x, y, 0f);

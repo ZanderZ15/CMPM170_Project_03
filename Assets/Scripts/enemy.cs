@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
         player = FindFirstObjectByType<PlayerHealth>();
         speed = moveSpeed;
         halfSize = size / 2f;
-        despawnX = leftEdgeX;
+        target = playerTransform;
 
         //enemy sprite
         transform.localScale = Vector3.one * size;
@@ -43,8 +43,12 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        //enemy sprite logic
-        transform.position += Vector3.left * speed * Time.deltaTime;
+        //track the player
+        if (target != null)
+        {
+            Vector3 direction = (target.position - transform.position).normalized;
+            transform.position += direction * speed * Time.deltaTime;
+        }
 
         if (projectiles != null && projectiles.TryHit(transform.position, halfSize))
         {
@@ -61,7 +65,8 @@ public class Enemy : MonoBehaviour
 
         if (transform.position.x < despawnX)
         {
-            Destroy(gameObject);
+            hasHit = true;
+            player.TakeDamage(1);
         }
     }
 }
