@@ -67,4 +67,25 @@ public class Projectile : MonoBehaviour
             }
         }
     }
+    
+    public bool TryHit(Vector2 center, float halfSize)
+    //collision check, makes one bullet count as one hit
+    {
+    const float bulletHalf = 0.25f; 
+
+    foreach (GameObject bul in bulletArray)
+    {
+        if (!bul.activeSelf) continue;
+
+        Vector2 p = bul.transform.position;
+        if (Mathf.Abs(p.x - center.x) < halfSize + bulletHalf &&
+            Mathf.Abs(p.y - center.y) < halfSize + bulletHalf)
+        {
+            //hit response
+            bul.SetActive(false);
+            return true;
+        }
+    }
+    return false;
+    } 
 }

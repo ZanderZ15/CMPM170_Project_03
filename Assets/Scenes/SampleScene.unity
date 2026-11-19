@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7317465}
   - component: {fileID: 7317466}
+  - component: {fileID: 7317467}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -164,6 +165,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   bulletPrefab: {fileID: 3874958508245750928, guid: 7f961175cf8d97744a0db90e6b47cfcd, type: 3}
+  bulletSpeed: 10
+  maxDistance: 15
+--- !u!114 &7317467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7317464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9699c0831268b87488b912ba7219b18c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  projectileManager: {fileID: 7317466}
+  spawnInterval: 1.5
+  enemySpeed: 3
+  enemySize: 1
+  blockSize: 2
+  blockHealth: 3
+  blockYOffset: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
