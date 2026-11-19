@@ -1,67 +1,72 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor.Rendering.BuiltIn.ShaderGraph;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    List<GameObject> bulletArray;
-    Dictionary<GameObject, Vector2> bulletDirections = new Dictionary<GameObject, Vector2>();
+    List<ProjClass> bulletArray;
+    //Dictionary<GameObject, Vector2> bulletDirections = new Dictionary<GameObject, Vector2>();
 
     [SerializeField] GameObject bulletPrefab;
-    [SerializeField] float bulletSpeed = 10f;
-    [SerializeField] float maxDistance = 15f;
+    
 
     void Start()
     {
         Vector2 spawnLocation = new Vector2(-1000, -1000);
-        bulletArray = new List<GameObject>();
+        bulletArray = new List<ProjClass>();
         for (int i = 0; i < 5; i++)
         {
             GameObject bullet = Instantiate(bulletPrefab, spawnLocation, Quaternion.identity);
-            bulletArray.Add(bullet);
+            ProjClass pClass = new ProjClass(bullet);
+
+            bulletArray.Add(pClass);
             bulletArray[i].SetActive(false);
         }
-        Debug.Log(bulletArray);
+        //Debug.Log(bulletArray);
     }
     void Update()
     {   
         Fly();
     }
 
-    public GameObject GetFirstActive()
+    public ProjClass GetFirstActive()
     {
-        foreach (GameObject bul in bulletArray)
+        foreach (ProjClass bul in bulletArray)
         {
             //find first bullet not being used
-            if (!bul.activeSelf)
-            return bul;
+            if (!bul.IsActive())
+                return bul;
         }
         return null;
     }
 
-    public void Launch(GameObject bul, Vector2 direction)
+    public void Launch(ProjClass bul, Vector2 direction)
     {
-        bulletDirections[bul] = direction.normalized;
+        
+        bul.SetStartPos(bul.GetProj().transform.position);
+        bul.SetDir(direction.normalized);
 
         //rotate bullet to face its travel direction
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        bul.transform.rotation = Quaternion.Euler(0, 0, angle);
+        bul.GetProj().transform.rotation = Quaternion.Euler(0, 0, angle);
 
         bul.SetActive(true);
     }
     
     private void Fly()
     {
-        foreach (GameObject bul in bulletArray)
+        foreach (ProjClass bul in bulletArray)
         {
-            if (!bul.activeSelf) continue;
+            if (!bul.IsActive()) continue;
 
-            Vector2 dir = bulletDirections[bul];
+            Vector2 dir = bul.GetDir();
+
             //move bullet based on speed and elapsed time
-            bul.transform.position += (Vector3)(dir * bulletSpeed * Time.deltaTime);
+            bul.GetProj().transform.position += (Vector3)(dir * bul.GetSpeed() * Time.deltaTime);
 
-            if (bul.transform.position.magnitude > maxDistance)
+            if (Vector2.Distance(bul.GetStartPos(), bul.GetProj().transform.position) > bul.GetMaxDist())
             {
                 bul.SetActive(false);
             }
@@ -73,11 +78,11 @@ public class Projectile : MonoBehaviour
     {
     const float bulletHalf = 0.25f; 
 
-    foreach (GameObject bul in bulletArray)
+    foreach (ProjClass bul in bulletArray)
     {
-        if (!bul.activeSelf) continue;
+        if (!bul.IsActive()) continue;
 
-        Vector2 p = bul.transform.position;
+        Vector2 p = bul.GetProj().transform.position;
         if (Mathf.Abs(p.x - center.x) < halfSize + bulletHalf &&
             Mathf.Abs(p.y - center.y) < halfSize + bulletHalf)
         {

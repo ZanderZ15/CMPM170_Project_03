@@ -60,17 +60,17 @@ public class Movement : MonoBehaviour
 
     void Shoot(Vector2 direction)
     {
-        GameObject bul = prman.GetFirstActive();
+        ProjClass bul = prman.GetFirstActive();
 
         if (bul == null)
         {
             return;
         }
-
-        bul.transform.position = transform.position;
+        
+        bul.GetProj().transform.position = transform.position;
         prman.Launch(bul, direction);
         //bring bullet to our location
-        //start coroutine to have bullet travel in direction
+        //Set direction and active
 
     }
     
