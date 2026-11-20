@@ -11,7 +11,9 @@ public class Enemy : MonoBehaviour
     //debounce for enemy damage
     bool hasHit;
 
-    public void Init(Projectile projectileManager, Sprite sprite, float moveSpeed, float size, float leftEdgeX, Sprite gunSprite)
+    Transform target;
+
+    public void Init(Projectile projectileManager, Sprite sprite, float moveSpeed, float size, float leftEdgeX, Sprite gunSprite, Transform playerTransform)
     {
         projectiles = projectileManager;
         player = FindFirstObjectByType<PlayerHealth>();
