@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
 
     Transform target;
 
-    public void Init(Projectile projectileManager, Sprite sprite, float moveSpeed, float size, float leftEdgeX, Sprite gunSprite, Transform playerTransform)
+    public void Init(Projectile projectileManager, Sprite sprite, float moveSpeed, float size, Sprite gunSprite, Transform playerTransform, Color color)
     {
         projectiles = projectileManager;
         player = FindFirstObjectByType<PlayerHealth>();
@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
         transform.localScale = Vector3.one * size;
         SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
-        sr.color = Color.red;
+        sr.color = color;
         sr.sortingOrder = 0;
 
         if (gunSprite != null)
@@ -60,12 +60,6 @@ public class Enemy : MonoBehaviour
 
         //damaging player
         if (!hasHit && player != null && player.Overlaps(transform.position, halfSize))
-        {
-            hasHit = true;
-            player.TakeDamage(1);
-        }
-
-        if (transform.position.x < despawnX)
         {
             hasHit = true;
             player.TakeDamage(1);

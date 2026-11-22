@@ -10,8 +10,13 @@ public class EnemySpawner : MonoBehaviour
     [Header("Spawner Block")]
     [SerializeField] float blockSize = 2f;
     [SerializeField] int blockHealth = 3;
+    [SerializeField] float blockDistance = 15f;
     [SerializeField] float blockYOffset = 0f;  
     [SerializeField] Sprite gunSprite;
+
+    [Header("Enemy Colors")]
+    [SerializeField] Color firstEnemyColor = Color.red;
+    [SerializeField] Color secondEnemyColor = Color.yellow;
 
     Camera cam;
     Sprite squareSprite;
@@ -21,10 +26,14 @@ public class EnemySpawner : MonoBehaviour
     GameObject block;
     SpriteRenderer[] segments;
     int health;
+    int spawnerIndex;
+    Color currentEnemyColor;
+    float centerX;
 
     void Start()
     {
         cam = Camera.main;
+        centerX = cam.transform.position.x;
 
         //find the player
         GameObject player = GameObject.Find("Player");
@@ -40,19 +49,23 @@ public class EnemySpawner : MonoBehaviour
         tex.Apply();
         squareSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
 
-        //spawner block spawn and block health
-        health = blockHealth;
-        BuildBlock();
+        SpawnBlock();
     }
 
-    void BuildBlock()
+    void SpawnBlock()
     {
-        float halfH = cam.orthographicSize;
-        float halfW = halfH * cam.aspect;
-        Vector3 c = cam.transform.position;
+        float x = (spawnerIndex == 0) ? centerX + blockDistance : centerX - blockDistance;
+        currentEnemyColor = (spawnerIndex == 0) ? firstEnemyColor : secondEnemyColor;
 
+        health = blockHealth;
+        timer = 0f;
+        BuildBlock(x);
+    }
+
+    void BuildBlock(float x)
+    {
         block = new GameObject("SpawnerBlock");
-        block.transform.position = new Vector3(15f, 0f, 0f);
+        block.transform.position = new Vector3(x, 0f, 0f);
 
         GameObject body = new GameObject("Body");
         body.transform.SetParent(block.transform, false);
@@ -72,10 +85,12 @@ public class EnemySpawner : MonoBehaviour
         {
             GameObject seg = new GameObject("HealthSegment" + i);
             seg.transform.SetParent(block.transform, false);
-            float x = -blockSize / 2f + segWidth / 2f + i * (segWidth + gap);
-
-            seg.transform.localPosition = new Vector3(x, barY, 0f);
+            
+            float segX = -blockSize / 2f + segWidth / 2f + i * (segWidth + gap);
+            
+            seg.transform.localPosition = new Vector3(segX, barY, 0f);   
             seg.transform.localScale = new Vector3(segWidth, 0.22f, 1f);
+
             SpriteRenderer sr = seg.AddComponent<SpriteRenderer>();
             sr.sprite = squareSprite;
             sr.color = Color.green;
@@ -117,6 +132,10 @@ public class EnemySpawner : MonoBehaviour
             //destroy spawner
             Destroy(block);
             block = null;
+            spawnerIndex++;
+
+            if (spawnerIndex == 1)
+                SpawnBlock();
         }
     }
 
@@ -136,7 +155,7 @@ public class EnemySpawner : MonoBehaviour
             case 1: // right
                 x += offset;
                 break;
-            case 2: // top
+            case 2: // topBuildBlock
                 y += offset;
                 break;
             case 3: // bottom
@@ -149,7 +168,6 @@ public class EnemySpawner : MonoBehaviour
 
         //gun
         Enemy enemy = e.AddComponent<Enemy>();
-        enemy.Init(projectileManager, squareSprite, enemySpeed, enemySize,
-                    -100f, gunSprite, playerTransform);
+        enemy.Init(projectileManager, squareSprite, enemySpeed, enemySize, gunSprite, playerTransform, currentEnemyColor);
     }
 }
