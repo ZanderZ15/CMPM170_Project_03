@@ -67,13 +67,7 @@ public class EnemySpawner : MonoBehaviour
         block = new GameObject("SpawnerBlock");
         block.transform.position = new Vector3(x, 0f, 0f);
 
-        GameObject body = new GameObject("Body");
-        body.transform.SetParent(block.transform, false);
-        body.transform.localScale = Vector3.one * blockSize;
-        SpriteRenderer bodySr = body.AddComponent<SpriteRenderer>();
-        bodySr.sprite = squareSprite;
-        bodySr.color = new Color(0.6f, 0.1f, 0.7f);   
-        bodySr.sortingOrder = 0;
+        VectorShapes.Loop(block.transform, VectorShapes.Square(blockSize / 2f), new Color(0.7f, 0.2f, 1f), 0.1f, 0);
 
         // Health bar
         float barY = blockSize / 2f + 0.3f;
@@ -93,7 +87,7 @@ public class EnemySpawner : MonoBehaviour
 
             SpriteRenderer sr = seg.AddComponent<SpriteRenderer>();
             sr.sprite = squareSprite;
-            sr.color = Color.green;
+            sr.color = new Color(0f, 1f, 0.5f);
             sr.sortingOrder = 2;
             segments[i] = sr;
         }

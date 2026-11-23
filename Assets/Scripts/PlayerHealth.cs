@@ -34,7 +34,7 @@ public class PlayerHealth : MonoBehaviour
 
             SpriteRenderer sr = h.AddComponent<SpriteRenderer>();
             sr.sprite = heartSprite;
-            sr.color = Color.red;
+            sr.color = new Color(1f, 0.2f, 0.6f);
             sr.sortingOrder = 5;
             hearts[i] = sr;
         }

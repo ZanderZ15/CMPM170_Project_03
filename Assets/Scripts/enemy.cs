@@ -23,10 +23,7 @@ public class Enemy : MonoBehaviour
 
         //enemy sprite
         transform.localScale = Vector3.one * size;
-        SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-        sr.sprite = sprite;
-        sr.color = color;
-        sr.sortingOrder = 0;
+        VectorShapes.Loop(transform, VectorShapes.Diamond(0.5f), color, 0.08f, 0);
 
         if (gunSprite != null)
         {
