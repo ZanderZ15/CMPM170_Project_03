@@ -7,6 +7,7 @@ public class ProjClass
     private Vector2 direction;
     float bulletSpeed = 10f;
     float maxDistance = 15f;
+    float hitHalf = 0.25f;
     
     public ProjClass(GameObject bul)
     {
@@ -63,6 +64,16 @@ public class ProjClass
     public float GetSpeed()
     {
         return bulletSpeed;
+    }
+
+    public void SetHitHalf(float h)
+    {
+        hitHalf = h;
+    }
+
+    public float GetHitHalf()
+    {
+        return hitHalf;
     }
 
 }

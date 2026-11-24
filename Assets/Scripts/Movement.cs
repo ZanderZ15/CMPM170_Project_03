@@ -11,6 +11,7 @@ public class Movement : MonoBehaviour
     private float max_speed = 10f;
     Vector2 moveVal;
     private Rigidbody2D rb;
+    bool shotgunEquipped;
 
     [SerializeField] GameObject manager;
     Projectile prman;
@@ -47,6 +48,12 @@ public class Movement : MonoBehaviour
         }
         
     }
+
+    public void ToggleWeapon()
+    {
+        shotgunEquipped = !shotgunEquipped;
+    }
+
     void CapSpeed(Rigidbody2D rb)
     {
         Vector2 v_current = rb.linearVelocity;
@@ -60,6 +67,12 @@ public class Movement : MonoBehaviour
 
     void Shoot(Vector2 direction)
     {
+        if (shotgunEquipped)
+        {
+            prman.FireShotgun(transform.position, direction);
+            return;
+        }
+
         ProjClass bul = prman.GetFirstActive();
 
         if (bul == null)
@@ -71,8 +84,5 @@ public class Movement : MonoBehaviour
         prman.Launch(bul, direction);
         //bring bullet to our location
         //Set direction and active
-
     }
-    
-    
 }
